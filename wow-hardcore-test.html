@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🪦 Test de Clase — WoW Hardcore</title>
+<style>
+  :root{
+    --gold:#f8b700;
+    --gold-soft:#ffd966;
+    --bg0:#0a0a0f;
+    --bg1:#15151f;
+    --panel:#1c1c28;
+    --panel-2:#23232f;
+    --border:#3a3a4a;
+    --text:#e8e6df;
+    --muted:#9a96a8;
+    --red:#c0392b;
+    --green:#2ecc71;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 50% 0%, #2a1d10 0%, transparent 55%),
+      linear-gradient(180deg,var(--bg0),var(--bg1));
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:24px 16px 60px;
+  }
+  .app{width:100%;max-width:680px}
+
+  header{text-align:center;margin-bottom:18px}
+  .skull{font-size:48px;filter:drop-shadow(0 0 12px rgba(248,183,0,.4))}
+  h1{
+    font-size:clamp(22px,5vw,34px);
+    letter-spacing:1px;
+    color:var(--gold);
+    text-shadow:0 2px 0 #000,0 0 18px rgba(248,183,0,.35);
+    margin:6px 0 2px;
+  }
+  .sub{color:var(--muted);font-style:italic;font-size:14px}
+
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+
+  /* progress */
+  .progress-wrap{margin-bottom:20px}
+  .progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+  .bar{height:10px;background:#000;border:1px solid var(--border);border-radius:99px;overflow:hidden}
+  .bar > i{
+    display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,#a9730a,var(--gold),var(--gold-soft));
+    transition:width .4s cubic-bezier(.3,.8,.3,1);
+    box-shadow:0 0 12px rgba(248,183,0,.6);
+  }
+
+  .qnum{color:var(--gold);font-weight:bold;font-size:13px;letter-spacing:2px;text-transform:uppercase}
+  .question{font-size:clamp(18px,3.6vw,22px);margin:8px 0 20px;line-height:1.35}
+
+  .options{display:flex;flex-direction:column;gap:12px}
+  .opt{
+    text-align:left;
+    background:var(--bg1);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:10px;
+    padding:15px 16px;
+    font-size:15px;
+    cursor:pointer;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    transition:transform .12s, border-color .15s, background .15s;
+  }
+  .opt:hover{transform:translateX(4px);border-color:var(--gold);background:#20202c}
+  .opt .ico{font-size:22px;flex:0 0 auto}
+
+  .footer-nav{display:flex;justify-content:space-between;margin-top:22px}
+  .ghost{
+    background:transparent;border:1px solid var(--border);color:var(--muted);
+    padding:9px 16px;border-radius:8px;cursor:pointer;font-size:14px;
+  }
+  .ghost:hover{color:var(--text);border-color:var(--gold)}
+  .ghost:disabled{opacity:.3;cursor:not-allowed}
+
+  /* result */
+  .result{display:none;text-align:center}
+  .result.show{display:block;animation:rise .6s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .result .badge{font-size:72px;filter:drop-shadow(0 0 16px rgba(248,183,0,.5))}
+  .result h2{font-size:30px;color:var(--gold);margin:6px 0 4px;letter-spacing:1px}
+  .result .tag{display:inline-block;background:#000;border:1px solid var(--gold);color:var(--gold-soft);
+    padding:4px 12px;border-radius:99px;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+  .result p.desc{color:var(--text);line-height:1.55;font-size:16px;margin-bottom:10px}
+  .result p.flavor{color:var(--muted);font-style:italic;font-size:14px}
+
+  .stats{margin:22px 0 6px;text-align:left}
+  .stat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+  .stat-row .lbl{width:120px;color:var(--muted)}
+  .stat-row .meter{flex:1;height:8px;background:#000;border:1px solid var(--border);border-radius:99px;overflow:hidden}
+  .stat-row .meter > i{display:block;height:100%;background:linear-gradient(90deg,#a9730a,var(--gold))}
+
+  .retry{margin-top:24px;background:linear-gradient(180deg,var(--gold),#c98c00);color:#1a1205;
+    border:none;font-weight:bold;padding:13px 26px;border-radius:10px;cursor:pointer;font-size:15px;letter-spacing:.5px;
+    box-shadow:0 6px 18px rgba(248,183,0,.3)}
+  .retry:hover{filter:brightness(1.08)}
+
+  .tip{margin-top:22px;font-size:12px;color:var(--muted);text-align:center}
+  .friends{
+    margin-top:18px;background:rgba(0,0,0,.35);border:1px dashed var(--border);
+    border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text);line-height:1.5
+  }
+  .friends b{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="skull">🪦</div>
+    <h1>¿Qué clase eres en WoW Hardcore?</h1>
+    <p class="sub">Donde morir es para siempre y tus amigos te lo recordarán toda la vida</p>
+  </header>
+
+  <div class="card">
+    <!-- QUIZ -->
+    <section id="quiz">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="pLabel">Pregunta 1 de 7</span>
+          <span id="pPct">0%</span>
+        </div>
+        <div class="bar"><i id="pBar"></i></div>
+      </div>
+
+      <div class="qnum" id="qNum">PREGUNTA 1</div>
+      <div class="question" id="qText"></div>
+      <div class="options" id="qOpts"></div>
+
+      <div class="footer-nav">
+        <button class="ghost" id="backBtn" disabled>← Atrás</button>
+        <span style="font-size:12px;color:var(--muted);align-self:center">Elige con sinceridad ⚰️</span>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section id="result" class="result">
+      <div class="badge" id="rBadge">⚔️</div>
+      <h2 id="rName">Guerrero</h2>
+      <div class="tag" id="rTag">El Ancla</div>
+      <p class="desc" id="rDesc"></p>
+      <p class="flavor" id="rFlavor"></p>
+
+      <div class="stats" id="rStats"></div>
+
+      <div class="friends">
+        <b>🎲 Modo amigos:</b> que cada uno haga el test y <b>nadie repita clase</b>.
+        Si dos sacáis lo mismo, se negocia o se tira a dados (need/greed, como debe ser).
+        Montad un grupo equilibrado: tanque, cura, daño a distancia, daño cuerpo a cuerpo y un cazador que os salve a todos.
+      </div>
+
+      <button class="retry" id="retryBtn">↻ Volver a hacer el test</button>
+      <p class="tip">Comparte tu resultado en el chat de voz antes del próximo pull.</p>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const QUESTIONS = [
+  {
+    q: "Aparece un bicho élite que no esperabas. ¿Qué haces?",
+    opts: [
+      {ico:"🛡️", t:"Me planto delante, que pegue a mí, yo aguanto.", c:"A"},
+      {ico:"🏹", t:"Lo marco, calculo, y lo mato antes de que llegue.", c:"B"},
+      {ico:"🔮", t:"Pongo distancia y le quito vida con calma.", c:"C"},
+      {ico:"✨", t:"Me aseguro de que el grupo no muera, da igual el bicho.", c:"D"},
+      {ico:"🗡️", t:"¿Élite? Ya estoy en sigilo detrás de un árbol.", c:"E"},
+    ]
+  },
+  {
+    q: "Tu forma de jugar en grupo es…",
+    opts: [
+      {ico:"🛡️", t:"\"Yo voy delante, vosotros detrás.\"", c:"A"},
+      {ico:"🏹", t:"\"Dejádmelo a mí, lo tengo controlado.\"", c:"B"},
+      {ico:"🔮", t:"\"Dadme 5 segundos para preparar, no entréis aún.\"", c:"C"},
+      {ico:"✨", t:"\"Tranquilos, estáis a tope de vida siempre.\"", c:"D"},
+      {ico:"🗡️", t:"\"Voy a explorar… avisad si pasa algo.\" (nunca avisa)", c:"E"},
+    ]
+  },
+  {
+    q: "Tu mayor miedo en Hardcore:",
+    opts: [
+      {ico:"🛡️", t:"Que un add me coja por la espalda.", c:"A"},
+      {ico:"🏹", t:"Quedarme sin escapatoria.", c:"B"},
+      {ico:"🔮", t:"Que algo me llegue al cuerpo a cuerpo.", c:"C"},
+      {ico:"✨", t:"Que se me muera un amigo por mi culpa.", c:"D"},
+      {ico:"🗡️", t:"Que me vean. Literalmente.", c:"E"},
+    ]
+  },
+  {
+    q: "Cae un ítem bueno. Tú…",
+    opts: [
+      {ico:"🛡️", t:"\"Es para mí, soy el que aguanta los golpes.\"", c:"A"},
+      {ico:"🏹", t:"\"Lo necesito para hacer más daño, es lógico.\"", c:"B"},
+      {ico:"🔮", t:"Tiro need pero sin discutir.", c:"C"},
+      {ico:"✨", t:"\"Pásamelo si nadie lo quiere, no pasa nada.\"", c:"D"},
+      {ico:"🗡️", t:"Ya lo tengo en la mochila. (¿cuándo?)", c:"E"},
+    ]
+  },
+  {
+    q: "¿Cómo es tu relación con el peligro?",
+    opts: [
+      {ico:"🛡️", t:"El peligro me busca a mí, y me gusta.", c:"A"},
+      {ico:"🏹", t:"Lo planifico para que el peligro no exista.", c:"B"},
+      {ico:"🔮", t:"Lo manejo desde lejos, gracias.", c:"C"},
+      {ico:"✨", t:"No busco peligro, busco que nadie muera.", c:"D"},
+      {ico:"🗡️", t:"El peligro soy yo (cuando nadie mira).", c:"E"},
+    ]
+  },
+  {
+    q: "Tu frase en el chat de voz:",
+    opts: [
+      {ico:"🛡️", t:"\"VENID TODOS A MÍ\"", c:"A"},
+      {ico:"🏹", t:"\"Tranquilos, yo apunto.\"", c:"B"},
+      {ico:"🔮", t:"\"No me toquéis el mob, lo tengo en control.\"", c:"C"},
+      {ico:"✨", t:"\"¿Quién necesita curas?\"", c:"D"},
+      {ico:"🗡️", t:"\"…\" (estaba en mute robando un cofre)", c:"E"},
+    ]
+  },
+  {
+    q: "Si tu personaje muriera, sería por…",
+    opts: [
+      {ico:"🛡️", t:"Heroísmo. Salvé al grupo.", c:"A"},
+      {ico:"🏹", t:"Un fallo de cálculo del 1%. Inaceptable.", c:"B"},
+      {ico:"🔮", t:"Un mob que me alcanzó. Maldita melé.", c:"C"},
+      {ico:"✨", t:"Me quedé sin maná curando a otro.", c:"D"},
+      {ico:"🗡️", t:"Avaricia. Había un cofre más.", c:"E"},
+    ]
+  },
+];
+
+const RESULTS = {
+  A:{badge:"⚔️", name:"Guerrero", tag:"El Ancla",
+     desc:"El ancla del grupo. Sin miedo, sin maná, sin excusas. Aguantas todo y todos confían en que no caerás… aunque seas el primero en pisar la trampa.",
+     flavor:"En HC: el héroe que se sacrifica por el grupo.",
+     stats:{Supervivencia:65, Daño:60, Utilidad:45, Ego:70}},
+  B:{badge:"🏹", name:"Cazador", tag:"El Superviviente",
+     desc:"El cerebro táctico. Feign Death es tu seguro de vida y la mascota tu mejor amigo (a veces más fiable que los humanos). El que más probabilidades tiene de llegar a nivel 60.",
+     flavor:"En HC: el superviviente nato.",
+     stats:{Supervivencia:95, Daño:70, Utilidad:60, Ego:50}},
+  C:{badge:"🔮", name:"Mago / Brujo", tag:"Cañón de Cristal",
+     desc:"Daño masivo desde lejos, pero de cristal. Brillante cuando todo sale bien, charco en el suelo cuando un mob te toca. Vives al límite del control.",
+     flavor:"En HC: mucho ego, poca vida.",
+     stats:{Supervivencia:35, Daño:95, Utilidad:55, Ego:90}},
+  D:{badge:"✨", name:"Sacerdote / Paladín", tag:"El Guardián",
+     desc:"El alma del grupo. No buscas gloria, buscas que nadie pise el cementerio. Sin ti el grupo dura 3 pulls. El amigo que todos quieren tener… y nadie cuida lo suficiente.",
+     flavor:"En HC: el guardián silencioso.",
+     stats:{Supervivencia:70, Daño:30, Utilidad:95, Ego:25}},
+  E:{badge:"🗡️", name:"Pícaro", tag:"El Oportunista",
+     desc:"El oportunista silencioso. Sigilo, escape y manos largas. Sobrevives porque desapareces antes del problema… o porque el problema lo causaste tú y huiste.",
+     flavor:"En HC: el superviviente egoísta (cariñosamente).",
+     stats:{Supervivencia:80, Daño:75, Utilidad:40, Ego:80}},
+};
+
+/* ---------- STATE ---------- */
+let idx = 0;
+const answers = [];
+
+const qNum=document.getElementById('qNum');
+const qText=document.getElementById('qText');
+const qOpts=document.getElementById('qOpts');
+const pBar=document.getElementById('pBar');
+const pPct=document.getElementById('pPct');
+const pLabel=document.getElementById('pLabel');
+const backBtn=document.getElementById('backBtn');
+const quiz=document.getElementById('quiz');
+const result=document.getElementById('result');
+
+function render(){
+  const item=QUESTIONS[idx];
+  qNum.textContent="PREGUNTA "+(idx+1);
+  qText.textContent=item.q;
+  pLabel.textContent="Pregunta "+(idx+1)+" de "+QUESTIONS.length;
+  const pct=Math.round((idx)/QUESTIONS.length*100);
+  pBar.style.width=pct+"%";
+  pPct.textContent=pct+"%";
+  backBtn.disabled = idx===0;
+
+  qOpts.innerHTML="";
+  item.opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.innerHTML='<span class="ico">'+o.ico+'</span><span>'+o.t+'</span>';
+    b.onclick=()=>choose(o.c);
+    qOpts.appendChild(b);
+  });
+}
+
+function choose(c){
+  answers[idx]=c;
+  if(idx < QUESTIONS.length-1){ idx++; render(); }
+  else finish();
+}
+
+backBtn.onclick=()=>{ if(idx>0){ idx--; render(); } };
+
+function finish(){
+  pBar.style.width="100%";
+  pPct.textContent="100%";
+  const tally={A:0,B:0,C:0,D:0,E:0};
+  answers.forEach(a=>tally[a]++);
+  let best='A',max=-1;
+  for(const k in tally){ if(tally[k]>max){max=tally[k];best=k;} }
+  showResult(RESULTS[best]);
+}
+
+function showResult(r){
+  document.getElementById('rBadge').textContent=r.badge;
+  document.getElementById('rName').textContent=r.name;
+  document.getElementById('rTag').textContent=r.tag;
+  document.getElementById('rDesc').textContent=r.desc;
+  document.getElementById('rFlavor').textContent=r.flavor;
+
+  const sc=document.getElementById('rStats');
+  sc.innerHTML="";
+  for(const k in r.stats){
+    const row=document.createElement('div');
+    row.className='stat-row';
+    row.innerHTML='<span class="lbl">'+k+'</span><span class="meter"><i style="width:0%"></i></span>';
+    sc.appendChild(row);
+    const bar=row.querySelector('i');
+    setTimeout(()=>{ bar.style.transition='width .8s ease'; bar.style.width=r.stats[k]+'%'; },60);
+  }
+
+  quiz.style.display='none';
+  result.classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('retryBtn').onclick=()=>{
+  idx=0; answers.length=0;
+  result.classList.remove('show');
+  quiz.style.display='block';
+  render();
+};
+
+render();
+</script>
+</body>
+</html>
