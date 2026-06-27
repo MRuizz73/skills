@@ -3,356 +3,417 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🪦 Test de Clase — WoW Hardcore</title>
+<title>🪦 El Oráculo del Hardcore — ¿Quién eres en Azeroth?</title>
 <style>
   :root{
-    --gold:#f8b700;
-    --gold-soft:#ffd966;
-    --bg0:#0a0a0f;
-    --bg1:#15151f;
-    --panel:#1c1c28;
-    --panel-2:#23232f;
-    --border:#3a3a4a;
-    --text:#e8e6df;
-    --muted:#9a96a8;
-    --red:#c0392b;
-    --green:#2ecc71;
+    --gold:#f8b700; --gold-soft:#ffd966;
+    --bg0:#08080d; --bg1:#14141e;
+    --panel:#1c1c28; --panel-2:#23232f;
+    --border:#3a3a4a; --text:#e8e6df; --muted:#9a96a8;
+    --ally:#3a6fd8; --horde:#c0392b;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
     background:
-      radial-gradient(circle at 50% 0%, #2a1d10 0%, transparent 55%),
+      radial-gradient(circle at 50% -5%, #2a1d10 0%, transparent 55%),
       linear-gradient(180deg,var(--bg0),var(--bg1));
-    color:var(--text);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
+    color:var(--text); min-height:100vh;
+    display:flex; justify-content:center; align-items:flex-start;
     padding:24px 16px 60px;
   }
   .app{width:100%;max-width:680px}
-
   header{text-align:center;margin-bottom:18px}
-  .skull{font-size:48px;filter:drop-shadow(0 0 12px rgba(248,183,0,.4))}
-  h1{
-    font-size:clamp(22px,5vw,34px);
-    letter-spacing:1px;
-    color:var(--gold);
-    text-shadow:0 2px 0 #000,0 0 18px rgba(248,183,0,.35);
-    margin:6px 0 2px;
-  }
+  .skull{font-size:46px;filter:drop-shadow(0 0 12px rgba(248,183,0,.4))}
+  h1{font-size:clamp(20px,4.6vw,30px);letter-spacing:1px;color:var(--gold);
+     text-shadow:0 2px 0 #000,0 0 18px rgba(248,183,0,.35);margin:6px 0 2px;line-height:1.2}
   .sub{color:var(--muted);font-style:italic;font-size:14px}
 
-  .card{
-    background:linear-gradient(180deg,var(--panel),var(--panel-2));
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:24px;
-    box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
-  }
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border);border-radius:14px;padding:24px;
+    box-shadow:0 14px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04)}
 
-  /* progress */
-  .progress-wrap{margin-bottom:20px}
-  .progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+  .progress-wrap{margin-bottom:22px}
+  .progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);
+    margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
   .bar{height:10px;background:#000;border:1px solid var(--border);border-radius:99px;overflow:hidden}
-  .bar > i{
-    display:block;height:100%;width:0%;
+  .bar > i{display:block;height:100%;width:0%;
     background:linear-gradient(90deg,#a9730a,var(--gold),var(--gold-soft));
-    transition:width .4s cubic-bezier(.3,.8,.3,1);
-    box-shadow:0 0 12px rgba(248,183,0,.6);
-  }
+    transition:width .4s cubic-bezier(.3,.8,.3,1);box-shadow:0 0 12px rgba(248,183,0,.6)}
 
-  .qnum{color:var(--gold);font-weight:bold;font-size:13px;letter-spacing:2px;text-transform:uppercase}
-  .question{font-size:clamp(18px,3.6vw,22px);margin:8px 0 20px;line-height:1.35}
+  .qnum{color:var(--gold);font-weight:bold;font-size:12px;letter-spacing:3px;text-transform:uppercase}
+  .question{font-size:clamp(18px,3.4vw,22px);margin:8px 0 22px;line-height:1.4}
 
-  .options{display:flex;flex-direction:column;gap:12px}
-  .opt{
-    text-align:left;
-    background:var(--bg1);
-    border:1px solid var(--border);
-    color:var(--text);
-    border-radius:10px;
-    padding:15px 16px;
-    font-size:15px;
-    cursor:pointer;
-    display:flex;
-    gap:12px;
-    align-items:center;
-    transition:transform .12s, border-color .15s, background .15s;
-  }
+  .options{display:flex;flex-direction:column;gap:11px}
+  .opt{text-align:left;background:var(--bg1);border:1px solid var(--border);color:var(--text);
+    border-radius:10px;padding:15px 18px;font-size:15px;cursor:pointer;line-height:1.4;
+    display:flex;gap:14px;align-items:flex-start;transition:transform .12s,border-color .15s,background .15s}
   .opt:hover{transform:translateX(4px);border-color:var(--gold);background:#20202c}
-  .opt .ico{font-size:22px;flex:0 0 auto}
+  .opt .rune{color:var(--muted);font-size:14px;font-weight:bold;flex:0 0 auto;margin-top:1px;
+    letter-spacing:0;opacity:.7}
+  .opt:hover .rune{color:var(--gold);opacity:1}
 
-  .footer-nav{display:flex;justify-content:space-between;margin-top:22px}
-  .ghost{
-    background:transparent;border:1px solid var(--border);color:var(--muted);
-    padding:9px 16px;border-radius:8px;cursor:pointer;font-size:14px;
-  }
+  .footer-nav{display:flex;justify-content:space-between;margin-top:22px;align-items:center}
+  .ghost{background:transparent;border:1px solid var(--border);color:var(--muted);
+    padding:9px 16px;border-radius:8px;cursor:pointer;font-size:14px}
   .ghost:hover{color:var(--text);border-color:var(--gold)}
   .ghost:disabled{opacity:.3;cursor:not-allowed}
+  .hint{font-size:12px;color:var(--muted)}
 
-  /* result */
-  .result{display:none;text-align:center}
+  /* RESULT */
+  .result{display:none}
   .result.show{display:block;animation:rise .6s ease}
   @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-  .result .badge{font-size:72px;filter:drop-shadow(0 0 16px rgba(248,183,0,.5))}
-  .result h2{font-size:30px;color:var(--gold);margin:6px 0 4px;letter-spacing:1px}
-  .result .tag{display:inline-block;background:#000;border:1px solid var(--gold);color:var(--gold-soft);
-    padding:4px 12px;border-radius:99px;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
-  .result p.desc{color:var(--text);line-height:1.55;font-size:16px;margin-bottom:10px}
-  .result p.flavor{color:var(--muted);font-style:italic;font-size:14px}
+  .result .top{text-align:center}
+  .result .badge{font-size:66px;filter:drop-shadow(0 0 16px rgba(248,183,0,.5))}
+  .result h2{font-size:28px;color:var(--gold);margin:4px 0 2px;letter-spacing:1px}
+  .result .race-line{font-size:17px;color:var(--text);margin-bottom:8px}
+  .result .race-line b{color:var(--gold-soft)}
+  .faction{display:inline-block;padding:4px 14px;border-radius:99px;font-size:12px;
+    letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;border:1px solid}
+  .faction.ally{color:#cfe0ff;border-color:var(--ally);background:rgba(58,111,216,.15)}
+  .faction.horde{color:#ffd0c8;border-color:var(--horde);background:rgba(192,57,43,.15)}
 
-  .stats{margin:22px 0 6px;text-align:left}
-  .stat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+  .desc{color:var(--text);line-height:1.55;font-size:15px;margin-bottom:8px;text-align:center}
+  .flavor{color:var(--muted);font-style:italic;font-size:14px;text-align:center;margin-bottom:18px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+  .tile{background:rgba(0,0,0,.32);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+  .tile .k{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .tile .v{font-size:15px;color:var(--text)}
+  .tile .v small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+
+  .stats{margin:18px 0 4px}
+  .stat-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
   .stat-row .lbl{width:120px;color:var(--muted)}
   .stat-row .meter{flex:1;height:8px;background:#000;border:1px solid var(--border);border-radius:99px;overflow:hidden}
-  .stat-row .meter > i{display:block;height:100%;background:linear-gradient(90deg,#a9730a,var(--gold))}
+  .stat-row .meter > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#a9730a,var(--gold))}
 
-  .retry{margin-top:24px;background:linear-gradient(180deg,var(--gold),#c98c00);color:#1a1205;
-    border:none;font-weight:bold;padding:13px 26px;border-radius:10px;cursor:pointer;font-size:15px;letter-spacing:.5px;
-    box-shadow:0 6px 18px rgba(248,183,0,.3)}
+  .retry{margin-top:22px;width:100%;background:linear-gradient(180deg,var(--gold),#c98c00);color:#1a1205;
+    border:none;font-weight:bold;padding:13px 26px;border-radius:10px;cursor:pointer;font-size:15px;
+    letter-spacing:.5px;box-shadow:0 6px 18px rgba(248,183,0,.3)}
   .retry:hover{filter:brightness(1.08)}
 
-  .tip{margin-top:22px;font-size:12px;color:var(--muted);text-align:center}
-  .friends{
-    margin-top:18px;background:rgba(0,0,0,.35);border:1px dashed var(--border);
-    border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text);line-height:1.5
-  }
+  .friends{margin-top:18px;background:rgba(0,0,0,.35);border:1px dashed var(--border);
+    border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text);line-height:1.55}
   .friends b{color:var(--gold)}
+  .tip{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
     <div class="skull">🪦</div>
-    <h1>¿Qué clase eres en WoW Hardcore?</h1>
-    <p class="sub">Donde morir es para siempre y tus amigos te lo recordarán toda la vida</p>
+    <h1>El Oráculo del Hardcore</h1>
+    <p class="sub">No elijas tu personaje. Deja que tu alma lo revele.</p>
   </header>
 
   <div class="card">
-    <!-- QUIZ -->
     <section id="quiz">
       <div class="progress-wrap">
         <div class="progress-meta">
-          <span id="pLabel">Pregunta 1 de 7</span>
+          <span id="pLabel">Augurio 1 de 10</span>
           <span id="pPct">0%</span>
         </div>
         <div class="bar"><i id="pBar"></i></div>
       </div>
-
-      <div class="qnum" id="qNum">PREGUNTA 1</div>
+      <div class="qnum" id="qNum">AUGURIO I</div>
       <div class="question" id="qText"></div>
       <div class="options" id="qOpts"></div>
-
       <div class="footer-nav">
         <button class="ghost" id="backBtn" disabled>← Atrás</button>
-        <span style="font-size:12px;color:var(--muted);align-self:center">Elige con sinceridad ⚰️</span>
+        <span class="hint">Responde a la persona, no al juego.</span>
       </div>
     </section>
 
-    <!-- RESULT -->
     <section id="result" class="result">
-      <div class="badge" id="rBadge">⚔️</div>
-      <h2 id="rName">Guerrero</h2>
-      <div class="tag" id="rTag">El Ancla</div>
-      <p class="desc" id="rDesc"></p>
-      <p class="flavor" id="rFlavor"></p>
+      <div class="top">
+        <div class="badge" id="rBadge">⚔️</div>
+        <h2 id="rClass">Guerrero</h2>
+        <div class="race-line">Tu sangre es de <b id="rRace">Orco</b></div>
+        <div class="faction" id="rFaction">Horda</div>
+        <p class="desc" id="rDesc"></p>
+        <p class="flavor" id="rFlavor"></p>
+      </div>
+
+      <div class="grid">
+        <div class="tile"><div class="k">Rol natural</div><div class="v" id="rRole"></div></div>
+        <div class="tile"><div class="k">Especialización</div><div class="v" id="rSpec"></div></div>
+        <div class="tile"><div class="k">Profesiones</div><div class="v" id="rProf"></div></div>
+        <div class="tile"><div class="k">Riesgo en HC</div><div class="v" id="rRisk"></div></div>
+      </div>
 
       <div class="stats" id="rStats"></div>
 
       <div class="friends">
-        <b>🎲 Modo amigos:</b> que cada uno haga el test y <b>nadie repita clase</b>.
-        Si dos sacáis lo mismo, se negocia o se tira a dados (need/greed, como debe ser).
-        Montad un grupo equilibrado: tanque, cura, daño a distancia, daño cuerpo a cuerpo y un cazador que os salve a todos.
+        <b>🎲 Modo amigos:</b> que cada uno haga el Oráculo y <b>nadie repita clase</b>.
+        Si dos compartís destino, lo dejáis a los dados (need/greed, como debe ser).
+        Buscad equilibrio: alguien que aguante, alguien que cure, alguien que reviente y alguien que os saque del apuro.
       </div>
 
-      <button class="retry" id="retryBtn">↻ Volver a hacer el test</button>
-      <p class="tip">Comparte tu resultado en el chat de voz antes del próximo pull.</p>
+      <button class="retry" id="retryBtn">↻ Consultar de nuevo al Oráculo</button>
+      <p class="tip">El Oráculo solo respeta combinaciones reales de WoW Classic.</p>
     </section>
   </div>
 </div>
 
 <script>
-/* ---------- DATA ---------- */
-const QUESTIONS = [
-  {
-    q: "Aparece un bicho élite que no esperabas. ¿Qué haces?",
-    opts: [
-      {ico:"🛡️", t:"Me planto delante, que pegue a mí, yo aguanto.", c:"A"},
-      {ico:"🏹", t:"Lo marco, calculo, y lo mato antes de que llegue.", c:"B"},
-      {ico:"🔮", t:"Pongo distancia y le quito vida con calma.", c:"C"},
-      {ico:"✨", t:"Me aseguro de que el grupo no muera, da igual el bicho.", c:"D"},
-      {ico:"🗡️", t:"¿Élite? Ya estoy en sigilo detrás de un árbol.", c:"E"},
-    ]
-  },
-  {
-    q: "Tu forma de jugar en grupo es…",
-    opts: [
-      {ico:"🛡️", t:"\"Yo voy delante, vosotros detrás.\"", c:"A"},
-      {ico:"🏹", t:"\"Dejádmelo a mí, lo tengo controlado.\"", c:"B"},
-      {ico:"🔮", t:"\"Dadme 5 segundos para preparar, no entréis aún.\"", c:"C"},
-      {ico:"✨", t:"\"Tranquilos, estáis a tope de vida siempre.\"", c:"D"},
-      {ico:"🗡️", t:"\"Voy a explorar… avisad si pasa algo.\" (nunca avisa)", c:"E"},
-    ]
-  },
-  {
-    q: "Tu mayor miedo en Hardcore:",
-    opts: [
-      {ico:"🛡️", t:"Que un add me coja por la espalda.", c:"A"},
-      {ico:"🏹", t:"Quedarme sin escapatoria.", c:"B"},
-      {ico:"🔮", t:"Que algo me llegue al cuerpo a cuerpo.", c:"C"},
-      {ico:"✨", t:"Que se me muera un amigo por mi culpa.", c:"D"},
-      {ico:"🗡️", t:"Que me vean. Literalmente.", c:"E"},
-    ]
-  },
-  {
-    q: "Cae un ítem bueno. Tú…",
-    opts: [
-      {ico:"🛡️", t:"\"Es para mí, soy el que aguanta los golpes.\"", c:"A"},
-      {ico:"🏹", t:"\"Lo necesito para hacer más daño, es lógico.\"", c:"B"},
-      {ico:"🔮", t:"Tiro need pero sin discutir.", c:"C"},
-      {ico:"✨", t:"\"Pásamelo si nadie lo quiere, no pasa nada.\"", c:"D"},
-      {ico:"🗡️", t:"Ya lo tengo en la mochila. (¿cuándo?)", c:"E"},
-    ]
-  },
-  {
-    q: "¿Cómo es tu relación con el peligro?",
-    opts: [
-      {ico:"🛡️", t:"El peligro me busca a mí, y me gusta.", c:"A"},
-      {ico:"🏹", t:"Lo planifico para que el peligro no exista.", c:"B"},
-      {ico:"🔮", t:"Lo manejo desde lejos, gracias.", c:"C"},
-      {ico:"✨", t:"No busco peligro, busco que nadie muera.", c:"D"},
-      {ico:"🗡️", t:"El peligro soy yo (cuando nadie mira).", c:"E"},
-    ]
-  },
-  {
-    q: "Tu frase en el chat de voz:",
-    opts: [
-      {ico:"🛡️", t:"\"VENID TODOS A MÍ\"", c:"A"},
-      {ico:"🏹", t:"\"Tranquilos, yo apunto.\"", c:"B"},
-      {ico:"🔮", t:"\"No me toquéis el mob, lo tengo en control.\"", c:"C"},
-      {ico:"✨", t:"\"¿Quién necesita curas?\"", c:"D"},
-      {ico:"🗡️", t:"\"…\" (estaba en mute robando un cofre)", c:"E"},
-    ]
-  },
-  {
-    q: "Si tu personaje muriera, sería por…",
-    opts: [
-      {ico:"🛡️", t:"Heroísmo. Salvé al grupo.", c:"A"},
-      {ico:"🏹", t:"Un fallo de cálculo del 1%. Inaceptable.", c:"B"},
-      {ico:"🔮", t:"Un mob que me alcanzó. Maldita melé.", c:"C"},
-      {ico:"✨", t:"Me quedé sin maná curando a otro.", c:"D"},
-      {ico:"🗡️", t:"Avaricia. Había un cofre más.", c:"E"},
-    ]
-  },
+/* ===========================================================
+   Cada opción reparte puntos a CLASES y a RAZAS por separado.
+   Nada en la opción delata a qué clase apunta.
+=========================================================== */
+const Q = [
+  { q:"Es de madrugada. Un desconocido herido llama a tu puerta. Tu primer impulso:",
+    o:[
+      {t:"Abrir sin dudarlo y ofrecerle tu propia cama.",            cls:{priest:2,paladin:1}, race:{human:2,tauren:1}},
+      {t:"Dejarle pasar, pero sin quitarle el ojo de encima.",       cls:{warrior:2,hunter:1}, race:{dwarf:1,orc:2}},
+      {t:"Interrogarle desde la ventana antes de decidir.",          cls:{mage:2,rogue:1},     race:{gnome:1,undead:2}},
+      {t:"Pensar qué podrías sacar tú de todo esto.",                cls:{warlock:2,rogue:2},  race:{undead:2,troll:1}},
+      {t:"Dejarle comida fuera, pero no abrir.",                     cls:{druid:1,hunter:2},   race:{nightelf:2,troll:1}},
+    ]},
+  { q:"Una norma te parece profundamente injusta. ¿Qué haces con ella?",
+    o:[
+      {t:"La cumplo igual: el orden vale más que mi opinión.",       cls:{paladin:2,warrior:1},race:{human:2,dwarf:1}},
+      {t:"La rompo en silencio, sin que nadie se entere.",           cls:{rogue:2},            race:{undead:2,troll:1}},
+      {t:"Reúno argumentos y la discuto a la cara.",                 cls:{mage:1,priest:2},    race:{gnome:2,human:1}},
+      {t:"La ignoro y sigo mi propio camino.",                       cls:{hunter:2,druid:1},   race:{nightelf:1,orc:2}},
+      {t:"Busco la grieta del sistema y la uso a mi favor.",         cls:{warlock:2,rogue:1},  race:{undead:1,gnome:2}},
+    ]},
+  { q:"Tu idea de una tarde verdaderamente perfecta:",
+    o:[
+      {t:"Solo, en mitad de la naturaleza, sin nadie cerca.",        cls:{hunter:2,druid:2},   race:{nightelf:2,tauren:1}},
+      {t:"Rodeado de gente, brindando y contando batallitas.",       cls:{warrior:2},          race:{dwarf:2,troll:1}},
+      {t:"Encerrado leyendo algo que nadie más entiende.",           cls:{mage:2,warlock:1},   race:{gnome:2,undead:1}},
+      {t:"Echando una mano a quien lo necesita.",                    cls:{priest:2,paladin:1}, race:{human:2,tauren:1}},
+      {t:"Rebuscando algo de valor que otros pasaron por alto.",     cls:{rogue:2},            race:{undead:1,troll:2}},
+    ]},
+  { q:"Cuando todo se va al traste, tu instinto es…",
+    o:[
+      {t:"Ponerme delante y aguantar el golpe por los demás.",       cls:{warrior:2,paladin:2},race:{human:1,orc:2}},
+      {t:"Analizar en frío qué falló exactamente.",                  cls:{mage:2},             race:{gnome:1,undead:2}},
+      {t:"Adaptarme y buscar otra forma de seguir.",                 cls:{druid:2,shaman:1},   race:{nightelf:1,tauren:2}},
+      {t:"Apartarme y dejar que se resuelva solo.",                  cls:{rogue:2,hunter:1},   race:{undead:2,nightelf:1}},
+      {t:"Pedir fuerzas a algo más grande que yo.",                  cls:{shaman:2,priest:1},  race:{troll:2,tauren:1}},
+    ]},
+  { q:"De alguien, lo que más admiras es…",
+    o:[
+      {t:"La lealtad que no se rompe ni bajo presión.",              cls:{warrior:1,paladin:2},race:{dwarf:2,orc:1}},
+      {t:"La astucia para salir de cualquier lío.",                  cls:{rogue:2,hunter:1},   race:{undead:1,troll:2}},
+      {t:"El conocimiento que pocos llegan a alcanzar.",             cls:{mage:2,warlock:2},   race:{gnome:2,nightelf:1}},
+      {t:"La bondad que no espera nada a cambio.",                   cls:{priest:2},           race:{human:2,tauren:1}},
+      {t:"El vínculo con algo ancestral y antiguo.",                 cls:{shaman:2,druid:1},   race:{tauren:2,troll:1}},
+    ]},
+  { q:"En tu equipaje nunca falta…",
+    o:[
+      {t:"Algo afilado, por si las cosas se tuercen.",               cls:{warrior:2,rogue:1},  race:{orc:2,undead:1}},
+      {t:"Un libro, hierbas o ingredientes extraños.",               cls:{mage:1,warlock:1,druid:1}, race:{gnome:1,nightelf:2}},
+      {t:"Comida y herramientas para aguantar días fuera.",          cls:{hunter:2,shaman:1},  race:{dwarf:2,tauren:1}},
+      {t:"Amuletos y recuerdos con un significado profundo.",        cls:{priest:1,shaman:2},  race:{troll:2,tauren:1}},
+      {t:"Cosas que, técnicamente, no son tuyas.",                   cls:{rogue:2,warlock:1},  race:{undead:2,troll:1}},
+    ]},
+  { q:"La muerte, para ti, es…",
+    o:[
+      {t:"Un enemigo al que plantar cara hasta el final.",           cls:{warrior:2,paladin:1},race:{human:2,orc:1}},
+      {t:"Una parte natural del ciclo de las cosas.",                cls:{druid:2,shaman:1},   race:{tauren:2,nightelf:1}},
+      {t:"Un problema fascinante que resolver.",                     cls:{mage:1,warlock:2},   race:{gnome:1,undead:2}},
+      {t:"Algo a lo que ya perdí el miedo hace tiempo.",             cls:{rogue:1,hunter:2},   race:{undead:2,troll:1}},
+      {t:"Un tránsito hacia algo más elevado.",                      cls:{priest:2,shaman:1},  race:{human:1,troll:1}},
+    ]},
+  { q:"Dentro de un grupo, sueles ser el que…",
+    o:[
+      {t:"Va primero y marca el ritmo de la marcha.",               cls:{warrior:2},          race:{orc:2,human:1}},
+      {t:"Se asegura de que nadie se quede atrás.",                  cls:{priest:2,paladin:1}, race:{human:1,tauren:2}},
+      {t:"Conoce el camino y huele los peligros.",                   cls:{hunter:2,druid:1},   race:{nightelf:2,dwarf:1}},
+      {t:"Aparece justo cuando hace más falta.",                     cls:{rogue:1,mage:2},     race:{undead:1,gnome:2}},
+      {t:"Mantiene la calma cuando todo lo demás arde.",             cls:{shaman:2,druid:1},   race:{tauren:1,troll:2}},
+    ]},
+  { q:"Si eres sincero, tu mayor defecto es…",
+    o:[
+      {t:"Soy demasiado terco para mi propio bien.",                cls:{warrior:2},          race:{dwarf:2,orc:1}},
+      {t:"A veces solo pienso en mí mismo.",                         cls:{rogue:1,warlock:2},  race:{undead:2,troll:1}},
+      {t:"Me creo más listo que los que me rodean.",                cls:{mage:2},             race:{gnome:2,undead:1}},
+      {t:"Me cuesta horrores decir que no.",                        cls:{priest:2,paladin:1}, race:{human:2,tauren:1}},
+      {t:"Desconfío de casi todo el que se acerca.",                cls:{hunter:2},           race:{nightelf:2,undead:1}},
+    ]},
+  { q:"¿Qué legado querrías dejar tras de ti?",
+    o:[
+      {t:"Que me recuerden como un héroe que dio la cara.",          cls:{warrior:1,paladin:2},race:{human:2,orc:1}},
+      {t:"Saber que protegí a los míos hasta el final.",             cls:{priest:1,shaman:2},  race:{tauren:2,dwarf:1}},
+      {t:"Un descubrimiento que lo cambie todo.",                    cls:{mage:2,warlock:1},   race:{gnome:2,nightelf:1}},
+      {t:"Una leyenda susurrada que nadie pueda probar.",            cls:{rogue:2,hunter:1},   race:{undead:1,troll:2}},
+      {t:"Haber vivido libre, sin deberle nada a nadie.",            cls:{druid:2,hunter:1},   race:{nightelf:2,undead:1}},
+    ]},
 ];
 
-const RESULTS = {
-  A:{badge:"⚔️", name:"Guerrero", tag:"El Ancla",
-     desc:"El ancla del grupo. Sin miedo, sin maná, sin excusas. Aguantas todo y todos confían en que no caerás… aunque seas el primero en pisar la trampa.",
-     flavor:"En HC: el héroe que se sacrifica por el grupo.",
-     stats:{Supervivencia:65, Daño:60, Utilidad:45, Ego:70}},
-  B:{badge:"🏹", name:"Cazador", tag:"El Superviviente",
-     desc:"El cerebro táctico. Feign Death es tu seguro de vida y la mascota tu mejor amigo (a veces más fiable que los humanos). El que más probabilidades tiene de llegar a nivel 60.",
-     flavor:"En HC: el superviviente nato.",
-     stats:{Supervivencia:95, Daño:70, Utilidad:60, Ego:50}},
-  C:{badge:"🔮", name:"Mago / Brujo", tag:"Cañón de Cristal",
-     desc:"Daño masivo desde lejos, pero de cristal. Brillante cuando todo sale bien, charco en el suelo cuando un mob te toca. Vives al límite del control.",
-     flavor:"En HC: mucho ego, poca vida.",
-     stats:{Supervivencia:35, Daño:95, Utilidad:55, Ego:90}},
-  D:{badge:"✨", name:"Sacerdote / Paladín", tag:"El Guardián",
-     desc:"El alma del grupo. No buscas gloria, buscas que nadie pise el cementerio. Sin ti el grupo dura 3 pulls. El amigo que todos quieren tener… y nadie cuida lo suficiente.",
-     flavor:"En HC: el guardián silencioso.",
-     stats:{Supervivencia:70, Daño:30, Utilidad:95, Ego:25}},
-  E:{badge:"🗡️", name:"Pícaro", tag:"El Oportunista",
-     desc:"El oportunista silencioso. Sigilo, escape y manos largas. Sobrevives porque desapareces antes del problema… o porque el problema lo causaste tú y huiste.",
-     flavor:"En HC: el superviviente egoísta (cariñosamente).",
-     stats:{Supervivencia:80, Daño:75, Utilidad:40, Ego:80}},
+/* Combinaciones REALES de raza/clase en WoW Classic */
+const VALID = {
+  warrior:["human","dwarf","nightelf","gnome","orc","tauren","troll","undead"],
+  paladin:["human","dwarf"],
+  hunter: ["dwarf","nightelf","orc","tauren","troll"],
+  rogue:  ["human","dwarf","nightelf","gnome","orc","troll","undead"],
+  priest: ["human","dwarf","nightelf","undead","troll"],
+  mage:   ["human","gnome","undead","troll"],
+  warlock:["human","gnome","orc","undead"],
+  druid:  ["nightelf","tauren"],
+  shaman: ["orc","tauren","troll"],
 };
 
-/* ---------- STATE ---------- */
-let idx = 0;
-const answers = [];
+const RACE = {
+  human:   {name:"Humano",      faction:"ally",  trait:"ambición y don de mando"},
+  dwarf:   {name:"Enano",       faction:"ally",  trait:"tozudez y lealtad de roca"},
+  nightelf:{name:"Elfo de la Noche", faction:"ally", trait:"misterio y vínculo ancestral"},
+  gnome:   {name:"Gnomo",       faction:"ally",  trait:"ingenio afilado y curiosidad sin fin"},
+  orc:     {name:"Orco",        faction:"horde", trait:"honor y fuerza bruta"},
+  tauren:  {name:"Tauren",      faction:"horde", trait:"calma sabia y respeto por la vida"},
+  troll:   {name:"Trol",        faction:"horde", trait:"espiritualidad y instinto feroz"},
+  undead:  {name:"No-muerto",   faction:"horde", trait:"cinismo y libertad sin ataduras"},
+};
 
-const qNum=document.getElementById('qNum');
-const qText=document.getElementById('qText');
-const qOpts=document.getElementById('qOpts');
-const pBar=document.getElementById('pBar');
-const pPct=document.getElementById('pPct');
-const pLabel=document.getElementById('pLabel');
-const backBtn=document.getElementById('backBtn');
-const quiz=document.getElementById('quiz');
-const result=document.getElementById('result');
+const CLASS = {
+  warrior:{badge:"⚔️", name:"Guerrero", role:"Tanque / DPS cuerpo a cuerpo",
+    spec:"Armas · Furia · Protección", prof:"Herrería + Minería",
+    risk:"Medio — aguantas, pero atraes todo el peligro",
+    desc:"El ancla. Sin maná, sin excusas: solo acero y temple. Donde los demás dudan, tú ya estás dentro.",
+    flavor:"El que se sacrifica para que el resto cuente la historia.",
+    stats:{Supervivencia:65,Daño:60,Apoyo:35,Astucia:40}},
+  paladin:{badge:"🛡️", name:"Paladín", role:"Tanque / Sanador / Híbrido",
+    spec:"Reprensión · Sagrado · Protección", prof:"Herrería + Minería",
+    risk:"Bajo — burbuja salvavidas, casi imposible de matar",
+    desc:"Deber, justicia y una fe que no se dobla. Proteges, curas y, si hace falta, repartes en nombre de la Luz.",
+    flavor:"El muro que también es refugio.",
+    stats:{Supervivencia:85,Daño:45,Apoyo:75,Astucia:35}},
+  hunter:{badge:"🏹", name:"Cazador", role:"DPS a distancia",
+    spec:"Puntería · Bestias · Supervivencia", prof:"Peletería + Desuello",
+    risk:"Muy bajo — Finta + mascota = el rey de la supervivencia",
+    desc:"Paciente, independiente y siempre preparado. Tu mascota es más fiable que la mayoría de la gente.",
+    flavor:"El que más probabilidades tiene de ver el nivel 60.",
+    stats:{Supervivencia:95,Daño:70,Apoyo:45,Astucia:65}},
+  rogue:{badge:"🗡️", name:"Pícaro", role:"DPS cuerpo a cuerpo",
+    spec:"Combate · Asesinato · Sutileza", prof:"Ingeniería + (ganzúas)",
+    risk:"Medio — desvaneces el problema… o lo causaste tú",
+    desc:"Sigilo, oportunidad y manos largas. Sobrevives porque desapareces antes de que el peligro te encuentre.",
+    flavor:"El superviviente egoísta (cariñosamente).",
+    stats:{Supervivencia:75,Daño:80,Apoyo:25,Astucia:90}},
+  priest:{badge:"✨", name:"Sacerdote", role:"Sanador / DPS de sombra",
+    spec:"Disciplina · Sagrado · Sombra", prof:"Sastrería + Encantamiento",
+    risk:"Alto — frágil, pero sin ti el grupo dura 3 pulls",
+    desc:"El alma del grupo. No buscas gloria, buscas que nadie pise el cementerio.",
+    flavor:"El guardián silencioso que nadie cuida lo suficiente.",
+    stats:{Supervivencia:55,Daño:40,Apoyo:95,Astucia:50}},
+  mage:{badge:"🔮", name:"Mago", role:"DPS a distancia",
+    spec:"Escarcha · Fuego · Arcano", prof:"Sastrería + Encantamiento",
+    risk:"Alto — cañón de cristal: brillas o eres un charco",
+    desc:"Intelecto puro y arrogancia justificada. Controlas el campo… mientras nada te toque.",
+    flavor:"Mucho ego, poca vida, comida infinita para el grupo.",
+    stats:{Supervivencia:40,Daño:95,Apoyo:55,Astucia:70}},
+  warlock:{badge:"💀", name:"Brujo", role:"DPS a distancia",
+    spec:"Aflicción · Demonología · Destrucción", prof:"Sastrería + Encantamiento",
+    risk:"Bajo — piedra de alma: tu propio seguro de vida",
+    desc:"Buscas el poder allí donde otros no se atreven a mirar. Tu esbirro paga el precio por ti.",
+    flavor:"El que negocia con la oscuridad y sale ganando.",
+    stats:{Supervivencia:70,Daño:85,Apoyo:50,Astucia:80}},
+  druid:{badge:"🐾", name:"Druida", role:"Híbrido todoterreno",
+    spec:"Feral · Equilibrio · Restauración", prof:"Herboristería + Alquimia",
+    risk:"Bajo — formas para todo, escapas casi de cualquier cosa",
+    desc:"Equilibrio y adaptación. Tanque, sanador o garra según sople el viento.",
+    flavor:"El que nunca está atrapado en una sola forma.",
+    stats:{Supervivencia:80,Daño:55,Apoyo:70,Astucia:60}},
+  shaman:{badge:"⚡", name:"Chamán", role:"Híbrido / Apoyo",
+    spec:"Elemental · Mejora · Restauración", prof:"Herboristería + Alquimia",
+    risk:"Bajo — tótems y reencarnación: vuelves de la tumba",
+    desc:"Hablas con los espíritus y los elementos. Mantienes la calma cuando todo lo demás arde.",
+    flavor:"El pilar tranquilo que sostiene al grupo entero.",
+    stats:{Supervivencia:75,Daño:60,Apoyo:80,Astucia:55}},
+};
+
+const RUNE = ["ᚨ","ᚱ","ᚷ","ᚦ","ᛟ"]; // marcadores neutros, no delatan nada
+
+/* ---------- estado ---------- */
+let idx=0; const answers=[];
+const $=id=>document.getElementById(id);
+const quiz=$("quiz"), result=$("result");
 
 function render(){
-  const item=QUESTIONS[idx];
-  qNum.textContent="PREGUNTA "+(idx+1);
-  qText.textContent=item.q;
-  pLabel.textContent="Pregunta "+(idx+1)+" de "+QUESTIONS.length;
-  const pct=Math.round((idx)/QUESTIONS.length*100);
-  pBar.style.width=pct+"%";
-  pPct.textContent=pct+"%";
-  backBtn.disabled = idx===0;
-
-  qOpts.innerHTML="";
-  item.opts.forEach(o=>{
-    const b=document.createElement('button');
-    b.className='opt';
-    b.innerHTML='<span class="ico">'+o.ico+'</span><span>'+o.t+'</span>';
-    b.onclick=()=>choose(o.c);
-    qOpts.appendChild(b);
+  const item=Q[idx];
+  $("qNum").textContent="AUGURIO "+toRoman(idx+1);
+  $("qText").textContent=item.q;
+  $("pLabel").textContent="Augurio "+(idx+1)+" de "+Q.length;
+  const pct=Math.round(idx/Q.length*100);
+  $("pBar").style.width=pct+"%"; $("pPct").textContent=pct+"%";
+  $("backBtn").disabled = idx===0;
+  const c=$("qOpts"); c.innerHTML="";
+  item.o.forEach((o,i)=>{
+    const b=document.createElement("button");
+    b.className="opt";
+    b.innerHTML='<span class="rune">'+RUNE[i]+'</span><span>'+o.t+'</span>';
+    b.onclick=()=>choose(i);
+    c.appendChild(b);
   });
 }
-
-function choose(c){
-  answers[idx]=c;
-  if(idx < QUESTIONS.length-1){ idx++; render(); }
-  else finish();
+function choose(i){
+  answers[idx]=i;
+  if(idx<Q.length-1){idx++;render();} else finish();
 }
-
-backBtn.onclick=()=>{ if(idx>0){ idx--; render(); } };
+$("backBtn").onclick=()=>{if(idx>0){idx--;render();}};
 
 function finish(){
-  pBar.style.width="100%";
-  pPct.textContent="100%";
-  const tally={A:0,B:0,C:0,D:0,E:0};
-  answers.forEach(a=>tally[a]++);
-  let best='A',max=-1;
-  for(const k in tally){ if(tally[k]>max){max=tally[k];best=k;} }
-  showResult(RESULTS[best]);
+  $("pBar").style.width="100%"; $("pPct").textContent="100%";
+  const cls={}, race={};
+  answers.forEach((sel,qi)=>{
+    const o=Q[qi].o[sel];
+    for(const k in o.cls) cls[k]=(cls[k]||0)+o.cls[k];
+    for(const k in o.race) race[k]=(race[k]||0)+o.race[k];
+  });
+  const topClass=pickTop(cls, Object.keys(CLASS));
+  // raza: la mejor puntuada ENTRE las válidas para esa clase
+  const topRace=pickTop(race, VALID[topClass]);
+  show(topClass, topRace);
+}
+function pickTop(scores, allowed){
+  let best=allowed[0], max=-1;
+  allowed.forEach(k=>{ const v=scores[k]||0; if(v>max){max=v;best=k;} });
+  return best;
 }
 
-function showResult(r){
-  document.getElementById('rBadge').textContent=r.badge;
-  document.getElementById('rName').textContent=r.name;
-  document.getElementById('rTag').textContent=r.tag;
-  document.getElementById('rDesc').textContent=r.desc;
-  document.getElementById('rFlavor').textContent=r.flavor;
+function show(ck, rk){
+  const c=CLASS[ck], r=RACE[rk];
+  $("rBadge").textContent=c.badge;
+  $("rClass").textContent=c.name;
+  $("rRace").textContent=r.name;
+  const f=$("rFaction");
+  f.textContent = r.faction==="ally" ? "Alianza" : "Horda";
+  f.className="faction "+r.faction;
+  $("rDesc").textContent=c.desc;
+  $("rFlavor").textContent='“'+c.flavor+'”';
+  $("rRole").textContent=c.role;
+  $("rSpec").textContent=c.spec;
+  $("rProf").textContent=c.prof;
+  $("rRisk").textContent=c.risk;
 
-  const sc=document.getElementById('rStats');
-  sc.innerHTML="";
-  for(const k in r.stats){
-    const row=document.createElement('div');
-    row.className='stat-row';
-    row.innerHTML='<span class="lbl">'+k+'</span><span class="meter"><i style="width:0%"></i></span>';
+  const sc=$("rStats"); sc.innerHTML="";
+  for(const k in c.stats){
+    const row=document.createElement("div");
+    row.className="stat-row";
+    row.innerHTML='<span class="lbl">'+k+'</span><span class="meter"><i></i></span>';
     sc.appendChild(row);
-    const bar=row.querySelector('i');
-    setTimeout(()=>{ bar.style.transition='width .8s ease'; bar.style.width=r.stats[k]+'%'; },60);
+    const bar=row.querySelector("i");
+    setTimeout(()=>{bar.style.transition="width .8s ease";bar.style.width=c.stats[k]+"%";},60);
   }
-
-  quiz.style.display='none';
-  result.classList.add('show');
-  window.scrollTo({top:0,behavior:'smooth'});
+  quiz.style.display="none";
+  result.classList.add("show");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-document.getElementById('retryBtn').onclick=()=>{
+$("retryBtn").onclick=()=>{
   idx=0; answers.length=0;
-  result.classList.remove('show');
-  quiz.style.display='block';
+  result.classList.remove("show");
+  quiz.style.display="block";
   render();
 };
 
+function toRoman(n){
+  return ["I","II","III","IV","V","VI","VII","VIII","IX","X"][n-1]||n;
+}
 render();
 </script>
 </body>
