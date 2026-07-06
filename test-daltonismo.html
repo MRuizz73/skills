@@ -1,0 +1,453 @@
+<title>Test de daltonismo · Láminas de Ishihara</title>
+<style>
+  :root {
+    --paper: #f4f1e9;
+    --paper-2: #ece7db;
+    --ink: #26241f;
+    --ink-soft: #5c5849;
+    --olive: #8a8666;
+    --line: #d8d2c2;
+    --accent: #2f6f74;
+    --accent-ink: #1f4d51;
+    --good: #3f7d4e;
+    --bad: #b0563e;
+    --shadow: 0 18px 40px -22px rgba(38,36,31,.55);
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1a1917;
+      --paper-2: #232120;
+      --ink: #ece7da;
+      --ink-soft: #a49f8f;
+      --olive: #9a9578;
+      --line: #35322d;
+      --accent: #59a7ab;
+      --accent-ink: #7fc3c6;
+      --good: #6bbd7d;
+      --bad: #e08a6f;
+      --shadow: 0 18px 44px -20px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #f4f1e9; --paper-2: #ece7db; --ink: #26241f; --ink-soft: #5c5849;
+    --olive: #8a8666; --line: #d8d2c2; --accent: #2f6f74; --accent-ink: #1f4d51;
+    --good: #3f7d4e; --bad: #b0563e; --shadow: 0 18px 40px -22px rgba(38,36,31,.55);
+  }
+  :root[data-theme="dark"] {
+    --paper: #1a1917; --paper-2: #232120; --ink: #ece7da; --ink-soft: #a49f8f;
+    --olive: #9a9578; --line: #35322d; --accent: #59a7ab; --accent-ink: #7fc3c6;
+    --good: #6bbd7d; --bad: #e08a6f; --shadow: 0 18px 44px -20px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    padding: clamp(1rem, 4vw, 2.5rem);
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 560px; }
+
+  header { text-align: center; margin-bottom: 1.6rem; }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--olive); font-weight: 600; margin: 0 0 .5rem;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(1.9rem, 6vw, 2.7rem); line-height: 1.08;
+    margin: 0; text-wrap: balance; letter-spacing: -.01em;
+  }
+  .sub { color: var(--ink-soft); font-size: .95rem; margin: .6rem auto 0; max-width: 42ch; }
+
+  .card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: clamp(1.25rem, 4vw, 1.9rem);
+    box-shadow: var(--shadow);
+  }
+
+  /* progress */
+  .progress { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.4rem; }
+  .track { flex: 1; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .35s ease; }
+  .count { font-size: .8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .plate-frame { display: flex; justify-content: center; margin: .2rem 0 1.5rem; }
+  canvas.plate {
+    width: min(340px, 78vw); height: min(340px, 78vw);
+    border-radius: 50%;
+    display: block;
+  }
+
+  .q-label {
+    text-align: center; font-size: .95rem; color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .q-label b { color: var(--ink); font-weight: 600; }
+
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .options.solo { grid-template-columns: 1fr; }
+  button.opt {
+    font-family: var(--sans); font-size: 1.05rem; font-weight: 600;
+    color: var(--ink); background: var(--paper);
+    border: 1.5px solid var(--line); border-radius: 12px;
+    padding: .85rem 1rem; cursor: pointer;
+    transition: border-color .15s, transform .1s, background .15s;
+    font-variant-numeric: tabular-nums;
+  }
+  button.opt:hover { border-color: var(--accent); }
+  button.opt:active { transform: translateY(1px); }
+  button.opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .opt.nothing { grid-column: 1 / -1; color: var(--ink-soft); font-weight: 500; }
+
+  .foot { text-align: center; margin-top: 1.4rem; font-size: .78rem; color: var(--olive); }
+
+  /* results */
+  .verdict { text-align: center; }
+  .score {
+    font-family: var(--serif); font-size: 3.4rem; font-weight: 700;
+    line-height: 1; margin: .3rem 0 .1rem; font-variant-numeric: tabular-nums;
+  }
+  .score small { font-size: 1.3rem; color: var(--ink-soft); font-family: var(--sans); }
+  .badge {
+    display: inline-block; margin: .8rem 0 .4rem; padding: .35rem .9rem;
+    border-radius: 99px; font-size: .82rem; font-weight: 600; letter-spacing: .02em;
+  }
+  .badge.ok { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+  .badge.warn { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+  .interp { color: var(--ink-soft); font-size: .95rem; margin: .8rem auto 0; max-width: 44ch; }
+
+  .review { margin: 1.6rem 0 0; border-top: 1px solid var(--line); padding-top: 1.1rem; }
+  .review h3 { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--olive); margin: 0 0 .8rem; text-align: center; }
+  .rrow { display: flex; align-items: center; gap: .7rem; padding: .45rem 0; font-size: .9rem; border-bottom: 1px dashed var(--line); }
+  .rrow:last-child { border-bottom: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .dot.ok { background: var(--good); }
+  .dot.no { background: var(--bad); }
+  .rrow .plate-no { color: var(--ink-soft); width: 4.5rem; flex: none; }
+  .rrow .said { margin-left: auto; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .rrow .said b { color: var(--ink); }
+
+  .btn-primary {
+    display: inline-block; margin-top: 1.5rem;
+    font-family: var(--sans); font-size: 1rem; font-weight: 600;
+    background: var(--accent); color: #fff; border: 0; border-radius: 12px;
+    padding: .8rem 1.8rem; cursor: pointer; transition: transform .1s, opacity .15s;
+  }
+  @media (prefers-color-scheme: dark) { .btn-primary { color: #10201f; } }
+  :root[data-theme="dark"] .btn-primary { color: #10201f; }
+  :root[data-theme="light"] .btn-primary { color: #fff; }
+  .btn-primary:hover { opacity: .92; }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:focus-visible { outline: 3px solid var(--accent-ink); outline-offset: 2px; }
+
+  .disclaimer {
+    margin-top: 1.4rem; font-size: .78rem; color: var(--olive);
+    text-align: center; line-height: 1.5;
+  }
+  .hidden { display: none !important; }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Cribado visual · Láminas de Ishihara</p>
+    <h1>Test de daltonismo</h1>
+    <p class="sub">Ocho láminas para detectar la deficiencia rojo-verde, la forma más común de daltonismo. Mira cada círculo y elige el número que ves.</p>
+  </header>
+
+  <main class="card">
+    <!-- Quiz view -->
+    <section id="quiz">
+      <div class="progress">
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <span class="count" id="count">1 / 8</span>
+      </div>
+
+      <div class="plate-frame">
+        <canvas class="plate" id="plate" width="680" height="680" aria-label="Lámina de puntos de color"></canvas>
+      </div>
+
+      <p class="q-label">¿Qué número ves en la lámina? <b id="hint"></b></p>
+      <div class="options" id="options"></div>
+
+      <p class="foot">Míralo a distancia normal de lectura, sin forzar la vista.</p>
+    </section>
+
+    <!-- Result view -->
+    <section id="result" class="hidden">
+      <div class="verdict">
+        <p class="eyebrow">Resultado orientativo</p>
+        <div class="score" id="scoreNum">—<small id="scoreDen"></small></div>
+        <div class="badge" id="badge"></div>
+        <p class="interp" id="interp"></p>
+      </div>
+
+      <div class="review">
+        <h3>Repaso de tus respuestas</h3>
+        <div id="reviewList"></div>
+      </div>
+
+      <div style="text-align:center">
+        <button class="btn-primary" id="retry">Repetir el test</button>
+      </div>
+
+      <p class="disclaimer">
+        Esto es un cribado, no un diagnóstico. Los colores varían según la pantalla, el brillo
+        y la calibración. Si te preocupa tu visión del color, consulta a un oftalmólogo u optometrista.
+      </p>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- Plates ----------------------------------------------------------
+  // Standard-type plates: the figure is legible to normal vision and
+  // camouflaged for red-green deficiency. Palettes share luminance so the
+  // number can't be read by brightness alone.
+  const PLATES = [
+    { fig: "12", answer: "12", options: ["12", "17", "10"], demo: true,
+      hint: "(placa de demostración: casi todos la ven)" },
+    { fig: "8",  answer: "8",  options: ["8", "3"] },
+    { fig: "6",  answer: "6",  options: ["6", "5"] },
+    { fig: "29", answer: "29", options: ["29", "70"] },
+    { fig: "57", answer: "57", options: ["57", "35"] },
+    { fig: "5",  answer: "5",  options: ["5", "2"] },
+    { fig: "3",  answer: "3",  options: ["3", "8"] },
+    { fig: "15", answer: "15", options: ["15", "17"] },
+  ];
+  const NOTHING = "No veo ningún número";
+
+  const BG_PALETTE  = ["#7f8a3e", "#93a04f", "#aeb56e", "#899347", "#c0c184", "#6f7a36"];
+  const FIG_PALETTE = ["#c6683c", "#d17f49", "#dc9666", "#c8545a", "#d4745c", "#bf5a3f"];
+  const PLATE_BG    = "#efe9d8";
+
+  // ---- Plate generator -------------------------------------------------
+  function pick(arr) { return arr[(Math.random() * arr.length) | 0]; }
+
+  function jitter(hex, amt) {
+    const n = parseInt(hex.slice(1), 16);
+    let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    const d = (Math.random() * 2 - 1) * amt;
+    r = Math.max(0, Math.min(255, r + d));
+    g = Math.max(0, Math.min(255, g + d));
+    b = Math.max(0, Math.min(255, b + d));
+    return "rgb(" + (r|0) + "," + (g|0) + "," + (b|0) + ")";
+  }
+
+  function buildMask(text, size) {
+    const m = document.createElement("canvas");
+    m.width = m.height = size;
+    const c = m.getContext("2d");
+    c.clearRect(0, 0, size, size);
+    c.fillStyle = "#000";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    let fs = size * 0.62;
+    c.font = "900 " + fs + "px Arial, Helvetica, sans-serif";
+    const maxW = size * 0.6;
+    const w = c.measureText(text).width;
+    if (w > maxW) {
+      fs *= maxW / w;
+      c.font = "900 " + fs + "px Arial, Helvetica, sans-serif";
+    }
+    c.fillText(text, size / 2, size / 2 + size * 0.02);
+    return c.getImageData(0, 0, size, size).data;
+  }
+
+  function drawPlate(canvas, plate) {
+    const ctx = canvas.getContext("2d");
+    const S = canvas.width;              // internal resolution (square)
+    const cx = S / 2, cy = S / 2;
+    const R = S / 2 - 2;
+    const mask = buildMask(plate.fig, S);
+
+    ctx.clearRect(0, 0, S, S);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = PLATE_BG;
+    ctx.fill();
+    ctx.clip();
+
+    // circle packing via spatial-grid rejection sampling
+    const rMin = S * 0.008, rMax = S * 0.026;
+    const cell = rMax * 2;
+    const cols = Math.ceil(S / cell);
+    const grid = new Array(cols * cols);
+    function cidx(x, y) { return ((y / cell) | 0) * cols + ((x / cell) | 0); }
+
+    const attempts = 9000;
+    for (let a = 0; a < attempts; a++) {
+      const r = rMin + Math.pow(Math.random(), 1.6) * (rMax - rMin);
+      const ang = Math.random() * Math.PI * 2;
+      const dist = Math.sqrt(Math.random()) * (R - r - 1);
+      const x = cx + Math.cos(ang) * dist;
+      const y = cy + Math.sin(ang) * dist;
+
+      const gx = (x / cell) | 0, gy = (y / cell) | 0;
+      let ok = true;
+      for (let i = -1; i <= 1 && ok; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const nx = gx + i, ny = gy + j;
+          if (nx < 0 || ny < 0 || nx >= cols || ny >= cols) continue;
+          const bucket = grid[ny * cols + nx];
+          if (!bucket) continue;
+          for (let k = 0; k < bucket.length; k++) {
+            const d = bucket[k];
+            const dx = d.x - x, dy = d.y - y;
+            if (dx * dx + dy * dy < (d.r + r + 1.2) * (d.r + r + 1.2)) { ok = false; break; }
+          }
+          if (!ok) break;
+        }
+      }
+      if (!ok) continue;
+
+      const px = (Math.floor(y) * S + Math.floor(x)) * 4;
+      const inside = mask[px + 3] > 100;
+      const color = inside ? jitter(pick(FIG_PALETTE), 14) : jitter(pick(BG_PALETTE), 14);
+
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      const dot = { x: x, y: y, r: r };
+      const id = gy * cols + gx;
+      (grid[id] || (grid[id] = [])).push(dot);
+    }
+    ctx.restore();
+  }
+
+  // ---- Quiz flow -------------------------------------------------------
+  const els = {
+    quiz: document.getElementById("quiz"),
+    result: document.getElementById("result"),
+    plate: document.getElementById("plate"),
+    options: document.getElementById("options"),
+    hint: document.getElementById("hint"),
+    fill: document.getElementById("fill"),
+    count: document.getElementById("count"),
+    scoreNum: document.getElementById("scoreNum"),
+    scoreDen: document.getElementById("scoreDen"),
+    badge: document.getElementById("badge"),
+    interp: document.getElementById("interp"),
+    reviewList: document.getElementById("reviewList"),
+    retry: document.getElementById("retry"),
+  };
+
+  let current = 0;
+  const answers = [];
+
+  function shuffle(a) {
+    const b = a.slice();
+    for (let i = b.length - 1; i > 0; i--) {
+      const j = (Math.random() * (i + 1)) | 0;
+      const t = b[i]; b[i] = b[j]; b[j] = t;
+    }
+    return b;
+  }
+
+  function render() {
+    const p = PLATES[current];
+    drawPlate(els.plate, p);
+    els.hint.textContent = p.hint || "";
+    els.fill.style.width = ((current) / PLATES.length * 100) + "%";
+    els.count.textContent = (current + 1) + " / " + PLATES.length;
+
+    els.options.innerHTML = "";
+    const opts = shuffle(p.options);
+    opts.forEach(function (o) {
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.textContent = o;
+      b.onclick = function () { answer(o); };
+      els.options.appendChild(b);
+    });
+    const nb = document.createElement("button");
+    nb.className = "opt nothing";
+    nb.textContent = NOTHING;
+    nb.onclick = function () { answer(NOTHING); };
+    els.options.appendChild(nb);
+  }
+
+  function answer(choice) {
+    const p = PLATES[current];
+    answers.push({ fig: p.fig, answer: p.answer, said: choice, ok: choice === p.answer, demo: !!p.demo });
+    current++;
+    if (current < PLATES.length) render();
+    else showResult();
+  }
+
+  function showResult() {
+    els.quiz.classList.add("hidden");
+    els.result.classList.remove("hidden");
+    els.fill.style.width = "100%";
+
+    // Score only the diagnostic plates (exclude the demo plate).
+    const scored = answers.filter(function (a) { return !a.demo; });
+    const correct = scored.filter(function (a) { return a.ok; }).length;
+    const total = scored.length;
+
+    els.scoreNum.firstChild.textContent = correct;
+    els.scoreDen.textContent = " / " + total;
+
+    let cls, label, text;
+    if (correct === total) {
+      cls = "ok"; label = "Visión del color típica";
+      text = "Identificaste correctamente todas las láminas rojo-verde. No hay señales de deficiencia en este cribado.";
+    } else if (correct >= total - 1) {
+      cls = "ok"; label = "Probablemente típica";
+      text = "Fallaste una sola lámina. Suele deberse a la iluminación o al brillo de la pantalla más que a un daltonismo real. Puedes repetir el test.";
+    } else if (correct >= total - 3) {
+      cls = "warn"; label = "Posible deficiencia leve rojo-verde";
+      text = "Varias láminas rojo-verde no coincidieron. Podría indicar una deficiencia leve (protanomalía o deuteranomalía). Una prueba profesional lo confirmaría.";
+    } else {
+      cls = "warn"; label = "Posible deficiencia rojo-verde";
+      text = "Fallaste la mayoría de las láminas rojo-verde, un patrón compatible con daltonismo de tipo protán o deután. Conviene una valoración con un especialista.";
+    }
+    els.badge.className = "badge " + cls;
+    els.badge.textContent = label;
+    els.interp.textContent = text;
+
+    els.reviewList.innerHTML = "";
+    answers.forEach(function (a, i) {
+      const row = document.createElement("div");
+      row.className = "rrow";
+      row.innerHTML =
+        '<span class="dot ' + (a.ok ? "ok" : "no") + '"></span>' +
+        '<span class="plate-no">Lámina ' + (i + 1) + (a.demo ? " *" : "") + '</span>' +
+        '<span>Correcto: <b>' + a.answer + '</b></span>' +
+        '<span class="said">Tú: <b>' + a.said + '</b></span>';
+      els.reviewList.appendChild(row);
+    });
+    const note = document.createElement("p");
+    note.style.cssText = "font-size:.72rem;color:var(--olive);text-align:center;margin:.8rem 0 0";
+    note.textContent = "* Lámina de demostración: no cuenta para el resultado.";
+    els.reviewList.appendChild(note);
+  }
+
+  els.retry.onclick = function () {
+    current = 0;
+    answers.length = 0;
+    els.result.classList.add("hidden");
+    els.quiz.classList.remove("hidden");
+    render();
+  };
+
+  render();
+})();
+</script>
